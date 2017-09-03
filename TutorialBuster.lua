@@ -1,3 +1,7 @@
+local DB_VERSION = 0.00;
+
+local _, tb = ...;
+
 local MAX_BIT_FLAGS_TUTORIAL = 4294934528;
 local cvar_fields = {
 	"shipyardMissionTutorialFirst",
@@ -55,32 +59,31 @@ local bit_fields = {
 	LE_FRAME_TUTORIAL_X,
 };
 
-function TutorialBuster_OnLoad(self)
-	self:RegisterEvent("PLAYER_ENTERING_WORLD");
-end
+tb.frame = CreateFrame("Frame", "TutorialBusterFrame", UIParent);
+tb.frame:RegisterEvent("PLAYER_ENTERING_WORLD");
+tb.frame:SetScript("OnEvent", function(self, event, ...)
+	return tb[event] and tb[event](tb, ...);
+end);
 
-function TutorialBuster_OnEvent(self, event, ...)
-	local arg1 = ...;
-	if (event == "PLAYER_ENTERING_WORLD") then
-		self:UnregisterEvent(event);
+function tb:PLAYER_ENTERING_WORLD(self, ...)
+	if (not GetCVar("lastGarrisonMissionTutorial") or tonumber(GetCVar("lastGarrisonMissionTutorial")) < MAX_BIT_FLAGS_TUTORIAL) then
+		SetCVar("lastGarrisonMissionTutorial", MAX_BIT_FLAGS_TUTORIAL);
+	end
+	if (not GetCVar("orderHallMissionTutorial") or tonumber(GetCVar("orderHallMissionTutorial")) < MAX_BIT_FLAGS_TUTORIAL) then
+		SetCVar("orderHallMissionTutorial", MAX_BIT_FLAGS_TUTORIAL);
+	end
 
-		if (not GetCVar("lastGarrisonMissionTutorial") or tonumber(GetCVar("lastGarrisonMissionTutorial")) < MAX_BIT_FLAGS_TUTORIAL) then
-			SetCVar("lastGarrisonMissionTutorial", MAX_BIT_FLAGS_TUTORIAL);
-		end
-		if (not GetCVar("orderHallMissionTutorial") or tonumber(GetCVar("orderHallMissionTutorial")) < MAX_BIT_FLAGS_TUTORIAL) then
-			SetCVar("orderHallMissionTutorial", MAX_BIT_FLAGS_TUTORIAL);
-		end
-
-		local _, field;
-		for _,field in pairs(cvar_fields) do
-			if (tonumber(GetCVar(field)) == 0) then
-				SetCVar(field, 1);
-			end
-		end
-		for _,field in pairs(bit_fields) do
-			if (not GetCVarBitfield("closedInfoFrames", field)) then
-				SetCVarBitfield("closedInfoFrames", field, true);
-			end
+	local _, field;
+	for _,field in pairs(cvar_fields) do
+		if (tonumber(GetCVar(field)) == 0) then
+			SetCVar(field, 1);
 		end
 	end
+	for _,field in pairs(bit_fields) do
+		if (not GetCVarBitfield("closedInfoFrames", field)) then
+			SetCVarBitfield("closedInfoFrames", field, true);
+		end
+	end
+	
+	tb.frame:UnregisterEvent("ADDON_LOADED");
 end
