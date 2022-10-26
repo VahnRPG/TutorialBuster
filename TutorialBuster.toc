@@ -1,13 +1,13 @@
-## Interface: 80000
+## Interface: 100000
 ## Title: TutorialBuster
 ## Author: Lord Vashtal
-## Version: 1.0.8
-## X-Date: 2018-07-18
+## Version: 1.0.10
+## X-Date: 2022-10-25
 ## Notes: Disable the Blizzard tutorials
 ## SavedVariables: TutorialBusterOptions
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
-## X-Curse-Packaged-Version: v1.0.8
+## X-Curse-Packaged-Version: v1.0.10
 ## X-Curse-Project-Name: TutorialBuster
 ## X-Curse-Project-ID: tutorialbuster
 TutorialBuster.xml
